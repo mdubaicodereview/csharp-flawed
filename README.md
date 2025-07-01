@@ -1,7 +1,5 @@
 # Flawed C# Todo Console Application
 
-To test and compare AI code reviewers.
-
 ## Application Description
 
 A simple todo management console application with ASCII character UI elements that allows users to:
