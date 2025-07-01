@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mwilliams/git/csharp-flawed/csharp-flawed.csproj",
+      "projectUniqueName": "/Users/mwilliams/git/csharp-flawed-2/csharp-flawed.csproj",
       "projectName": "csharp-flawed",
-      "projectPath": "/Users/mwilliams/git/csharp-flawed/csharp-flawed.csproj",
+      "projectPath": "/Users/mwilliams/git/csharp-flawed-2/csharp-flawed.csproj",
       "packagesPath": "/Users/mwilliams/.nuget/packages/",
-      "outputPath": "/Users/mwilliams/git/csharp-flawed/obj/",
+      "outputPath": "/Users/mwilliams/git/csharp-flawed-2/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/mwilliams/.nuget/NuGet/NuGet.Config"
