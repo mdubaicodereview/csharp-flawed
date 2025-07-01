@@ -1,0 +1,15 @@
+/Users/mwilliams/git/csharp-flawed/bin/Debug/net6.0/csharp-flawed
+/Users/mwilliams/git/csharp-flawed/bin/Debug/net6.0/csharp-flawed.deps.json
+/Users/mwilliams/git/csharp-flawed/bin/Debug/net6.0/csharp-flawed.runtimeconfig.json
+/Users/mwilliams/git/csharp-flawed/bin/Debug/net6.0/csharp-flawed.dll
+/Users/mwilliams/git/csharp-flawed/bin/Debug/net6.0/csharp-flawed.pdb
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.AssemblyInfoInputs.cache
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.AssemblyInfo.cs
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.csproj.CoreCompileInputs.cache
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.sourcelink.json
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.dll
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/refint/csharp-flawed.dll
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.pdb
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/csharp-flawed.genruntimeconfig.cache
+/Users/mwilliams/git/csharp-flawed/obj/Debug/net6.0/ref/csharp-flawed.dll
