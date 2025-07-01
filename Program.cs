@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Text.Json; // Added for potential future serialization
 
 namespace csharp_flawed
 {
@@ -9,6 +10,10 @@ namespace csharp_flawed
     {
         static List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
         static string pwd = "admin123"; // Hardcoded password
+        
+        // Predefined categories and tags - intentionally using different naming conventions
+        static List<string> Categories = new List<string>() { "Work", "Personal", "Shopping", "Health", "Finance" };
+        static List<string> tags = new List<string>() { "urgent", "important", "can-wait", "delegated", "in-progress" };
         
         static void Main(string[] args)
         {
@@ -18,6 +23,8 @@ namespace csharp_flawed
             t1.Add("title", "Buy milk");
             t1.Add("done", false);
             t1.Add("date", DateTime.Now.AddDays(-1));
+            t1.Add("category", "Shopping"); // Added category
+            t1.Add("tags", new List<string>() { "urgent" }); // Added tags
             data.Add(t1);
             
             var t2 = new Dictionary<string, object>();
@@ -25,6 +32,8 @@ namespace csharp_flawed
             t2.Add("title", "Call mom");
             t2.Add("done", false);
             t2.Add("date", DateTime.Now.AddDays(-2));
+            t2.Add("category", "Personal"); // Added category
+            t2.Add("tags", new List<string>() { "important" }); // Added tags
             data.Add(t2);
             
             var t3 = new Dictionary<string, object>();
@@ -32,6 +41,8 @@ namespace csharp_flawed
             t3.Add("title", "Finish report");
             t3.Add("done", true);
             t3.Add("date", DateTime.Now.AddDays(-3));
+            t3.Add("category", "Work"); // Added category
+            t3.Add("tags", new List<string>() { "urgent", "important" }); // Added tags
             data.Add(t3);
             
             bool running = true;
@@ -47,14 +58,18 @@ namespace csharp_flawed
                     if (i < data.Count) {
                         var item = data[i];
                         string status = (bool)item["done"] ? "[X]" : "[ ]";
-                        Console.WriteLine($"{item["id"]}. {status} {item["title"]} ({item["date"]})");
+                        string category = item.ContainsKey("category") ? (string)item["category"] : "None";
+                        var tags = item.ContainsKey("tags") ? (List<string>)item["tags"] : new List<string>();
+                        string tagDisplay = tags.Count > 0 ? $"[{string.Join(", ", tags)}]" : "";
+                        Console.WriteLine($"{item["id"]}. {status} {item["title"]} ({item["date"]}) - {category} {tagDisplay}");
                     }
                 }
                 
                 Console.WriteLine("\n1. Add todo");
                 Console.WriteLine("2. Mark as done");
                 Console.WriteLine("3. Delete todo");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("4. Filter by category"); // Added option
+                Console.WriteLine("5. Exit");
                 Console.Write("\nChoice: ");
                 
                 // No input validation
@@ -71,6 +86,9 @@ namespace csharp_flawed
                         DeleteTodo();
                         break;
                     case 4:
+                        FilterByCategory(); // Added case
+                        break;
+                    case 5:
                         running = false;
                         break;
                     default:
@@ -97,6 +115,48 @@ namespace csharp_flawed
             newTodo.Add("title", title);
             newTodo.Add("done", false);
             newTodo.Add("date", DateTime.Now);
+            
+            // Get category - intentionally using a different variable name style
+            Console.WriteLine("\nAvailable Categories:");
+            for (int i = 0; i < Categories.Count; i++) {
+                Console.WriteLine($"{i+1}. {Categories[i]}");
+            }
+            Console.Write("Select category number (or 0 for none): ");
+            int cat_choice = Convert.ToInt32(Console.ReadLine()); // Intentionally using snake_case
+            
+            // Intentional flaw: No bounds checking
+            if (cat_choice > 0) {
+                newTodo.Add("category", Categories[cat_choice-1]);
+            }
+            
+            // Get tags - intentional flaw: using different naming convention
+            Console.WriteLine("\nAvailable Tags:");
+            for (int i = 0; i < tags.Count; i++) {
+                Console.WriteLine($"{i+1}. {tags[i]}");
+            }
+            Console.Write("Enter tag numbers separated by commas (or 0 for none): ");
+            string TagInput = Console.ReadLine(); // Intentionally using PascalCase
+            
+            if (!string.IsNullOrEmpty(TagInput) && TagInput != "0") {
+                try {
+                    // Intentional flaw: No error handling for invalid input format
+                    var selectedTags = new List<string>();
+                    foreach (var tagIndex in TagInput.Split(',')) {
+                        int idx = int.Parse(tagIndex.Trim());
+                        // Intentional flaw: No bounds checking
+                        if (idx > 0) {
+                            selectedTags.Add(tags[idx-1]);
+                        }
+                    }
+                    newTodo.Add("tags", selectedTags);
+                } catch {
+                    // Empty catch - swallows all exceptions
+                    // Intentional flaw: No feedback to user about error
+                    newTodo.Add("tags", new List<string>());
+                }
+            } else {
+                newTodo.Add("tags", new List<string>());
+            }
             
             // No validation
             data.Add(newTodo);
@@ -164,6 +224,70 @@ namespace csharp_flawed
             
             Console.WriteLine("Todo deleted if it existed!"); // Misleading message
             Thread.Sleep(1000);
+        }
+        
+        // New method to filter by category - intentionally using a different style
+        static void FilterByCategory() 
+        {
+            Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════╗");
+            Console.WriteLine("║        FILTER BY CATEGORY        ║");
+            Console.WriteLine("╚════════════════════════════════════╝");
+            
+            // Intentional flaw: Inefficient way to get unique categories
+            var uniqueCategories = new List<string>();
+            foreach (var item in data) {
+                if (item.ContainsKey("category")) {
+                    string cat = (string)item["category"];
+                    if (!uniqueCategories.Contains(cat)) {
+                        uniqueCategories.Add(cat);
+                    }
+                }
+            }
+            
+            Console.WriteLine("\nAvailable Categories:");
+            for (int i = 0; i < uniqueCategories.Count; i++) {
+                Console.WriteLine($"{i+1}. {uniqueCategories[i]}");
+            }
+            Console.WriteLine($"{uniqueCategories.Count+1}. Show all");
+            
+            Console.Write("\nSelect category number: ");
+            // Intentional flaw: No input validation
+            int selection = Convert.ToInt32(Console.ReadLine());
+            
+            Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════╗");
+            Console.WriteLine("║           FILTERED TODOS         ║");
+            Console.WriteLine("╚════════════════════════════════════╝\n");
+            
+            // Intentional flaw: Inefficient filtering
+            if (selection <= uniqueCategories.Count) {
+                string selectedCategory = uniqueCategories[selection-1];
+                Console.WriteLine($"Category: {selectedCategory}\n");
+                
+                // Intentional flaw: Duplicate code from main display
+                foreach (var item in data) {
+                    if (item.ContainsKey("category") && (string)item["category"] == selectedCategory) {
+                        string status = (bool)item["done"] ? "[X]" : "[ ]";
+                        var tags = item.ContainsKey("tags") ? (List<string>)item["tags"] : new List<string>();
+                        string tagDisplay = tags.Count > 0 ? $"[{string.Join(", ", tags)}]" : "";
+                        Console.WriteLine($"{item["id"]}. {status} {item["title"]} ({item["date"]}) {tagDisplay}");
+                    }
+                }
+            } else {
+                Console.WriteLine("All Todos:\n");
+                // Intentional flaw: More duplicate code
+                foreach (var item in data) {
+                    string status = (bool)item["done"] ? "[X]" : "[ ]";
+                    string category = item.ContainsKey("category") ? (string)item["category"] : "None";
+                    var tags = item.ContainsKey("tags") ? (List<string>)item["tags"] : new List<string>();
+                    string tagDisplay = tags.Count > 0 ? $"[{string.Join(", ", tags)}]" : "";
+                    Console.WriteLine($"{item["id"]}. {status} {item["title"]} ({item["date"]}) - {category} {tagDisplay}");
+                }
+            }
+            
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
         }
     }
 }
